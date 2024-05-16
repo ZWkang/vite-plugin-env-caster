@@ -1,0 +1,67 @@
+{
+  "name": "vite-plugin-env-caster",
+  "version": "0.0.0",
+  "packageManager": "pnpm@7.33.7",
+  "description": "> description:",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "zwkang",
+    "email": "kang95630@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.coim/zwkang/vite-plugin-env-caster.git"
+  },
+  "bugs": "https://github.coim/zwkang/vite-plugin-env-caster/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "lint": "eslint --cache . --fix",
+    "test": "vitest run",
+    "build": "tsup",
+    "start": "tsx src/index.ts",
+    "release": "bumpp && npm publish",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "prettier:all": "prettier -w ."
+  },
+  "peerDependencies": {
+    "vite": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.18.0",
+    "bumpp": "^8.2.1",
+    "eslint": "^8.57.0",
+    "prettier": "^2.8.8",
+    "tsup": "^6.7.0",
+    "tsx": "^3.14.0",
+    "typescript": "^4.9.5",
+    "vitest": "^0.22.1",
+    "zwkang-prettier-config": "^0.0.3"
+  }
+}
