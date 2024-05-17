@@ -1,14 +1,14 @@
 import type { Plugin } from 'vite'
 
 type Key = string
-type Config = ({
+export type Config = ({
   key: Key
   handle: (data: string) => any
 } | [
   Key,
   typeof Boolean | typeof Number,
 ])
-interface Options {
+export interface Options {
   configs?: Config[]
 }
 
