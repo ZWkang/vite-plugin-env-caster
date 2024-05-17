@@ -12,7 +12,7 @@ interface Options {
   configs?: Config[]
 }
 
-function handleSingleItem(obj: Record<string, string>, config: Config) {
+export function handleSingleItem(obj: Record<string, string>, config: Config) {
   if (Array.isArray(config)) {
     const [key, handle] = config
     return {
@@ -29,19 +29,23 @@ function handleSingleItem(obj: Record<string, string>, config: Config) {
   }
 }
 
+export function handleConfigsWithEnvs(obj: Record<string, string>, configs: Config[]) {
+  const envs = obj || {}
+  const envsKeys = Object.keys(envs)
+  configs.forEach((_config) => {
+    const { key, value } = handleSingleItem(envs, _config)
+    if (envsKeys.includes(key))
+      obj[key] = value
+  })
+}
+
 function VitePlugin(options: Options = {}): Plugin {
   const { configs = [] } = options
 
   return {
     name: `vite-plugin-env-caster`,
     configResolved(config) {
-      const envs = config.env || {}
-      const envsKeys = Object.keys(envs)
-      configs.forEach((_config) => {
-        const { key, value } = handleSingleItem(envs, _config)
-        if (envsKeys.includes(key))
-          config.env[key] = value
-      })
+      handleConfigsWithEnvs(config.env, configs)
     },
   }
 }
