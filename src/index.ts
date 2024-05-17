@@ -6,7 +6,7 @@ export type Config = ({
   handle: (data: string) => any
 } | [
   Key,
-  typeof Boolean | typeof Number,
+  (data: string) => any
 ])
 export interface Options {
   configs?: Config[]
