@@ -10,42 +10,45 @@ export type Config = ({
 ])
 export interface Options {
   configs?: Config[]
+  ignoreUndefined?: boolean
 }
 
-export function handleSingleItem(obj: Record<string, string>, config: Config) {
-  if (Array.isArray(config)) {
-    const [key, handle] = config
-    return {
-      key,
-      value: handle ? handle(obj[key]) : obj[key],
-    }
-  }
-  else {
-    const { key, handle } = config
-    return {
-      key,
-      value: handle ? handle(obj[key]) : obj[key],
-    }
-  }
-}
-
-export function handleConfigsWithEnvs(obj: Record<string, string>, configs: Config[]) {
+export function handleConfigsWithEnvs(obj: Record<string, string>, configs: Config[], ignoreUndefined: boolean) {
   const envs = obj || {}
   const envsKeys = Object.keys(envs)
   configs.forEach((_config) => {
-    const { key, value } = handleSingleItem(envs, _config)
-    if (envsKeys.includes(key))
-      obj[key] = value
+
+    let key: Key
+    let handle: (data: string) => any
+    if (Array.isArray(_config)) {
+      [key, handle] = _config
+    }
+    else {
+      ({ key, handle } = _config)
+    }
+
+    if (!envsKeys.includes(key)) {
+      return;
+    }
+
+    if (ignoreUndefined && typeof envs[key] === 'undefined') {
+      return;
+    }
+
+    return {
+      key,
+      value: handle ? handle(envs[key]) : envs[key],
+    }
   })
 }
 
 function VitePlugin(options: Options = {}): Plugin {
-  const { configs = [] } = options
+  const { configs = [], ignoreUndefined = true } = options
 
   return {
     name: `vite-plugin-env-caster`,
     configResolved(config) {
-      handleConfigsWithEnvs(config.env, configs)
+      handleConfigsWithEnvs(config.env, configs, ignoreUndefined)
     },
   }
 }
