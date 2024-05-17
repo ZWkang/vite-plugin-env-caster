@@ -15,9 +15,8 @@ export interface Options {
 
 export function handleConfigsWithEnvs(obj: Record<string, string>, configs: Config[], ignoreUndefined: boolean) {
   const envs = obj || {}
-  const envsKeys = Object.keys(envs)
   configs.forEach((_config) => {
-
+    console.log(_config)
     let key: Key
     let handle: (data: string) => any
     if (Array.isArray(_config)) {
@@ -26,19 +25,11 @@ export function handleConfigsWithEnvs(obj: Record<string, string>, configs: Conf
     else {
       ({ key, handle } = _config)
     }
-
-    if (!envsKeys.includes(key)) {
-      return;
-    }
-
     if (ignoreUndefined && typeof envs[key] === 'undefined') {
       return;
     }
 
-    return {
-      key,
-      value: handle ? handle(envs[key]) : envs[key],
-    }
+    obj[key] = handle ? handle(envs[key]) : envs[key]
   })
 }
 
