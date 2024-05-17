@@ -16,7 +16,6 @@ export interface Options {
 export function handleConfigsWithEnvs(obj: Record<string, string>, configs: Config[], ignoreUndefined: boolean) {
   const envs = obj || {}
   configs.forEach((_config) => {
-    console.log(_config)
     let key: Key
     let handle: (data: string) => any
     if (Array.isArray(_config)) {
